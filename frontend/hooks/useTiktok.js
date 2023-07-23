@@ -12,7 +12,7 @@ const defaultAccounts = {
   clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
   systemProgram: SystemProgram.programId,
 }
-console.log("Default Account",defaultAccounts )
+
 const useTiktok = (
   setTikToks,
   userDetail,
@@ -23,13 +23,8 @@ const useTiktok = (
   setNewVideoShow,
 ) => {
   const wallet = useWallet()
-  console.log('wallet is', wallet)
   const connection = new anchor.web3.Connection(SOLANA_HOST)
-  console.log('connection is', connection)
-  console.log('SOLANA_HOST', SOLANA_HOST)
   const program = getProgramInstance(connection, wallet)
-  console.log('program is', program)
-  console.log('program ID is', program.programId)
   const getTiktoks = async () => {
     console.log('fetching')
 
@@ -45,8 +40,6 @@ const useTiktok = (
   }
 
   const likeVideo = async index => {
-
-    const wallet = useWallet()
     let [video_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('video'), new BN(index).toArrayLike(Buffer, 'be', 8)],
       program.programId,
@@ -97,31 +90,23 @@ const useTiktok = (
   }
 
   const newVideo = async () => {
-    console.log("New Video Module")
-    //const wallet = useWallet()
     let [state_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('state'), wallet.publicKey.toBuffer()],
+      [utf8.encode('state')],
       program.programId,
     )
-    console.log(`state_pda is , ${state_pda.toString()}`);
-    
-    const stateInfo = await program.account.stateAccount.fetch(state_pda);
-    console.log("stateInfo is ", stateInfo);
+
+    const stateInfo = await program.account.stateAccount.fetch(state_pda)
 
     let [video_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('video'), stateInfo.videoCount.toArrayLike(Buffer, 'be', 8)],
       program.programId,
-    );
+    )
 
     const tx = await program.rpc.createVideo(
       description,
-      console.log("description is ", description),
       videoUrl,
-      console.log("videoUrl is ", videoUrl),
       userDetail.userName,
-      console.log("userDetail.userName is ", userDetail.userName),
       userDetail.userProfileImageUrl,
-      console.log("userDetail.userProfileImageUrl is ", userDetail.userProfileImageUrl),
       {
         accounts: {
           state: state_pda,
@@ -130,10 +115,9 @@ const useTiktok = (
           ...defaultAccounts,
         },
       },
-      console.log("accounts is ", accounts),
     )
 
-    console.log(tx);
+    console.log(tx)
 
     setDescription('')
     setVideoUrl('')
@@ -161,7 +145,7 @@ const useTiktok = (
     console.log(comments)
     return comments
   }
-  return { newVideo, getTiktoks, likeVideo, createComment,  getComments }
+  return { getTiktoks, likeVideo, createComment, newVideo, getComments }
 }
 
 export default useTiktok

@@ -29,7 +29,7 @@ export const TIKTOK_PROGRAM_ID = new PublicKey(
   : CLUSTER === 'testnet' 
   ? 'BShqBmAsHXUMnc79Z1EHtWywiic5S1FWH2Kd8i35wiwA'
   : CLUSTER === 'devnet'
-        ? 'FYgvX8oW4nEJZ7vyL9vTy4gj62jaoe3JF7PFQDP7jMuW'
+        ? 'NRsvKPAPZuSkLW2vJNjydmZQ3PnkQgZAjwWNTTaWDZu'
   : ''
 );
 
